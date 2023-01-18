@@ -1,15 +1,8 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.7-eclipse-temurin-11'
-            args '-v $HOME/.m2:/root/.m2'
-        }
-    }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B'
-            }
-        }
+node {
+    checkout scm
+    
+    docker.withRegistry('hhtps://registry.hub.docker.com','dockerhub'){
+        def customImage = docker.build("2imfatx/20127589")
+        customImage.push()
     }
 }
