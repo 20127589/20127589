@@ -8,6 +8,7 @@ pipeline {
 
   stages {
     stage("build") {
+      agent { any }
       environment {
         DOCKER_TAG="${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
       }
