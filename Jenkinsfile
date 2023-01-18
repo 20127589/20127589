@@ -1,24 +1,14 @@
 pipeline {
     agent {
-        label 'docker'
+        docker {
+            image 'maven:3.8.7-eclipse-temurin-11'
+            args '-v $HOME/.m2:/root/.m2'
+        }
     }
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean install'
-            }
-        }
-        stage('Docker Build') {
-            steps {
-                sh "docker build -t myimage:$BUILD_NUMBER ."
-            }
-        }
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh "docker login -u $USERNAME -p $PASSWORD"
-                    sh "docker push myimage:$BUILD_NUMBER"
-                }
+                sh 'mvn -B'
             }
         }
     }
